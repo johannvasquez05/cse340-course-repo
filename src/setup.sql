@@ -59,3 +59,39 @@ VALUES
 (3, 'After-School Tutoring', 'Math and reading help', 'Youth Club', '2026-12-15'),
 (3, 'Neighborhood Clean-up', 'Picking up litter', 'Downtown Area', '2026-10-12'),
 (3, 'Charity Gala Support', 'Managing logistics', 'Grand Hotel', '2026-12-05');
+
+CREATE TABLE category (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE project_category (
+    project_id INT NOT NULL,
+    category_id INT NOT NULL,
+    PRIMARY KEY (project_id, category_id),
+    CONSTRAINT fk_project FOREIGN KEY (project_id) REFERENCES project(project_id) ON DELETE CASCADE,
+    CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES category(category_id) ON DELETE CASCADE
+);
+
+('Construction & Repair'),
+('Environment & Agriculture'),
+('Community Support'),
+('Education & Tech');
+
+INSERT INTO project_category (project_id, category_id) VALUES
+-- BrightFuture Builders Projects (Construction)
+(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), 
+
+-- GreenHarvest Growers Projects (Environment & Education)
+(6, 2), 
+(7, 2), 
+(8, 2), (8, 4), -- Compost Education fits Environment AND Education
+(9, 2), 
+(10, 2), (10, 3), -- Seed Exchange fits Environment AND Community
+
+-- UnityServe Volunteers Projects (Community & Education)
+(11, 3), 
+(12, 4), (12, 3), -- Elderly Tech fits Education AND Community
+(13, 4), (13, 3), -- Tutoring fits Education AND Community
+(14, 2), (14, 3), -- Clean-up fits Environment AND Community
+(15, 3);
