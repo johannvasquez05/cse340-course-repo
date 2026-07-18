@@ -1,4 +1,3 @@
-
 import { Pool } from 'pg';
 
 /**
@@ -14,21 +13,10 @@ import { Pool } from 'pg';
  */
 const pool = new Pool({
     connectionString: process.env.DB_URL,
-    ssl: true
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
-
-/**
- * Common SSL Issue:
- *
- * You may encounter SSL connection errors depending on your operating system, Node.js
- * version, or PostgreSQL server settings. If you have confirmed your credentials are
- * correct but still see SSL errors, try updating the 'ssl' property in the Pool
- * configuration above to:
- *
- * ssl: {
- *     rejectUnauthorized: false
- * }
- */
 
 /**
  * Since we will modify the normal pool object in development mode, we need to create and
