@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import { testConnection } from './src/models/db.js';
 import { getAllOrganizations } from './src/models/organizations.js';
+import { getAllProjects } from './src/models/projects.js'; // 1. Added import
 
 // Define the application environment
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
@@ -45,8 +46,16 @@ app.get('/organizations', async (req, res) => {
 });
 
 app.get('/projects', async (req, res) => {
-    const title = 'Service Projects';
-    res.render('projects', { title });
+    try {
+        const projects = await getAllProjects(); // Ensure this is called
+        const title = 'Service Projects';
+
+        // This line MUST include 'projects' to pass the data to the view
+        res.render('projects', { title, projects });
+    } catch (error) {
+        console.error("Error fetching projects for route:", error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 app.get('/categories', async (req, res) => {
