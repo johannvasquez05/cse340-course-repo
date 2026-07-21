@@ -73,6 +73,7 @@ CREATE TABLE project_category (
     CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES category(category_id) ON DELETE CASCADE
 );
 
+INSERT INTO category (name) VALUES
 ('Construction & Repair'),
 ('Environment & Agriculture'),
 ('Community Support'),
