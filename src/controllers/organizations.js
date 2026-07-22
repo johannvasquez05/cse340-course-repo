@@ -17,5 +17,4 @@ const showOrganizationDetailsPage = async (req, res) => {
     res.render('organization', { title, organizationDetails, projects });
 };
 
-// Export any controller functions
 export { showOrganizationsPage, showOrganizationDetailsPage };

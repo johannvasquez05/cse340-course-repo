@@ -16,6 +16,19 @@
                     <%= project.organization_name %>
                 </a></p>
 
+            <p><strong>Categories:</strong>
+                <% if (categories && categories.length> 0) { %>
+                    <% categories.forEach((category, index)=> { %>
+                        <a href="/category/<%= category.category_id %>">
+                            <%= category.name %>
+                        </a>
+                        <%= index < categories.length - 1 ? ', ' : '' %>
+                            <% }); %>
+                                <% } else { %>
+                                    None
+                                    <% } %>
+            </p>
+
             <h2>About this Project</h2>
             <p>
                 <%= project.description %>
