@@ -7,7 +7,8 @@
 
         <div>
             <p><strong>Date:</strong>
-                <%= project.date %>
+                <%= new Date(project.date).toLocaleDateString('en-US', { year: 'numeric' , month: 'long' ,
+                    day: 'numeric' }) %>
             </p>
             <p><strong>Location:</strong>
                 <%= project.location %>
