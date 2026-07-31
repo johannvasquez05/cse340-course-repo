@@ -28,6 +28,8 @@
                                 <% } else { %>
                                     None
                                     <% } %>
+                                        <p><a href="/assign-categories/<%= project.project_id %>">Edit Categories</a>
+                                        </p>
             </p>
 
             <h2>About this Project</h2>
@@ -35,6 +37,8 @@
                 <%= project.description %>
             </p>
         </div>
+
+
     </main>
 
     <%- include('partials/footer') %>
