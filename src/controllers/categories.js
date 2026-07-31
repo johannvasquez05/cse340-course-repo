@@ -57,7 +57,6 @@ const processAssignCategoriesForm = async (req, res) => {
     const projectId = req.params.projectId;
     const selectedCategoryIds = req.body.categoryIds || [];
 
-    // Ensure selectedCategoryIds is an array
     const categoryIdsArray = Array.isArray(selectedCategoryIds) ? selectedCategoryIds : [selectedCategoryIds];
 
     await updateCategoryAssignments(projectId, categoryIdsArray);

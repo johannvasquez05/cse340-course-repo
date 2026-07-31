@@ -1,4 +1,4 @@
-import { getUpcomingProjects, getProjectDetails, createProject } from '../models/projects.js';
+import { getUpcomingProjects, getProjectDetails, createProject, updateProject } from '../models/projects.js';
 import { getCategoriesByProjectId } from '../models/categories.js';
 import { getAllOrganizations } from '../models/organizations.js';
 import { body, validationResult } from 'express-validator';
@@ -65,23 +65,18 @@ const showNewProjectForm = async (req, res) => {
 }
 
 const processNewProjectForm = async (req, res) => {
-    // Check for validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        // Loop through validation errors and flash them
         errors.array().forEach((error) => {
             req.flash('error', error.msg);
         });
 
-        // Redirect back to the new project form
         return res.redirect('/new-project');
     }
 
-    // Extract form data from req.body
     const { title, description, location, date, organizationId } = req.body;
 
     try {
-        // Create the new project in the database
         const newProjectId = await createProject(title, description, location, date, organizationId);
 
         req.flash('success', 'New service project created successfully!');
@@ -93,4 +88,52 @@ const processNewProjectForm = async (req, res) => {
     }
 }
 
-export { showProjectsPage, showProjectDetailsPage, projectValidation, showNewProjectForm, processNewProjectForm };
+const showEditProjectForm = async (req, res) => {
+    try {
+        const projectId = req.params.id;
+
+        const project = await getProjectDetails(projectId);
+        const organizations = await getAllOrganizations();
+
+        if (!project) {
+            return res.status(404).send("Project not found");
+        }
+
+        res.render('edit-project', {
+            title: 'Edit Project',
+            project,
+            organizations
+        });
+    } catch (error) {
+        console.error("Error displaying edit project form:", error);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+const processEditProjectForm = async (req, res) => {
+    try {
+        const projectId = req.params.id;
+
+        const projectData = {
+            title: req.body.title,
+            date: req.body.date,
+            location: req.body.location,
+            description: req.body.description,
+            organization_id: req.body.organization_id
+        };
+
+        await updateProject(projectId, projectData);
+
+        req.flash('success', 'Project updated successfully.');
+        res.redirect(`/project/${projectId}`);
+
+    } catch (error) {
+        console.error("Error updating project:", error);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+export {
+    showProjectsPage, showProjectDetailsPage, projectValidation, showNewProjectForm, processNewProjectForm, showEditProjectForm,
+    processEditProjectForm
+};

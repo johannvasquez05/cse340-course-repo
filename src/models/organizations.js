@@ -30,11 +30,11 @@ const getOrganizationDetails = async (organizationId) => {
 
 /**
  * Creates a new organization in the database.
- * @param {string} name - The name of the organization.
- * @param {string} description - A description of the organization.
- * @param {string} contactEmail - The contact email for the organization.
- * @param {string} logoFilename - The filename of the organization's logo.
- * @returns {string} The id of the newly created organization record.
+ * @param {string} name
+ * @param {string} description
+ * @param {string} contactEmail
+ * @param {string} logoFilename
+ * @returns {string}
  */
 const createOrganization = async (name, description, contactEmail, logoFilename) => {
   const query = `
