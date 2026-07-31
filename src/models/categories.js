@@ -2,7 +2,6 @@ import db from './db.js';
 
 async function getAllCategories() {
     const sql = `SELECT * FROM category ORDER BY name ASC;`;
-
     try {
         const result = await db.query(sql);
         return result.rows;
@@ -47,7 +46,6 @@ const assignCategoryToProject = async (categoryId, projectId) => {
         INSERT INTO project_category (category_id, project_id)
         VALUES ($1, $2);
     `;
-
     await db.query(query, [categoryId, projectId]);
 }
 
@@ -63,11 +61,25 @@ const updateCategoryAssignments = async (projectId, categoryIds) => {
     }
 }
 
-export { 
-    getAllCategories, 
-    getCategoryById, 
-    getProjectsByCategoryId, 
-    getCategoriesByProjectId, 
-    getCategoriesByServiceProjectId, 
-    updateCategoryAssignments
+const insertCategory = async (name) => {
+    const query = `INSERT INTO category (name) VALUES ($1) RETURNING *`;
+    const result = await db.query(query, [name]);
+    return result.rows[0];
+};
+
+const updateCategory = async (categoryId, name) => {
+    const query = `UPDATE category SET name = $1 WHERE category_id = $2 RETURNING *`;
+    const result = await db.query(query, [name, categoryId]);
+    return result.rows[0];
+};
+
+export {
+    getAllCategories,
+    getCategoryById,
+    getProjectsByCategoryId,
+    getCategoriesByProjectId,
+    getCategoriesByServiceProjectId,
+    updateCategoryAssignments,
+    insertCategory,
+    updateCategory
 };

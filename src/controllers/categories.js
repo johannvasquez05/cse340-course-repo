@@ -3,7 +3,9 @@ import {
     getCategoryById,
     getProjectsByCategoryId,
     getCategoriesByServiceProjectId,
-    updateCategoryAssignments
+    updateCategoryAssignments,
+    insertCategory,
+    updateCategory
 } from '../models/categories.js';
 import { getProjectDetails } from '../models/projects.js';
 
@@ -65,4 +67,74 @@ const processAssignCategoriesForm = async (req, res) => {
     res.redirect(`/project/${projectId}`);
 };
 
-export { showCategoryDetailsPage, showCategoriesPage, showAssignCategoriesForm, processAssignCategoriesForm };
+const showNewCategoryForm = (req, res) => {
+    res.render('new-category', { title: 'Create New Category', error: null });
+};
+
+const processNewCategoryForm = async (req, res) => {
+    const { name } = req.body;
+
+    if (!name || name.length < 3 || name.length > 100) {
+        return res.render('new-category', {
+            title: 'Create New Category',
+            error: 'Category name must be between 3 and 100 characters.'
+        });
+    }
+
+    try {
+        await insertCategory(name);
+
+        req.flash('success', 'Category created successfully.');
+        res.redirect('/categories');
+
+    } catch (error) {
+        console.error("Error creating category:", error);
+        res.status(500).send("Error creating category");
+    }
+};
+
+const showEditCategoryForm = async (req, res) => {
+    try {
+        const category = await getCategoryById(req.params.id);
+        if (!category) return res.status(404).send("Category not found");
+
+        res.render('edit-category', { title: 'Edit Category', category, error: null });
+    } catch (error) {
+        console.error("Error fetching category for edit:", error);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+const processEditCategoryForm = async (req, res) => {
+    const { name } = req.body;
+    const categoryId = req.params.id;
+
+    if (!name || name.length < 3 || name.length > 100) {
+        return res.render('edit-category', {
+            title: 'Edit Category',
+            category: { category_id: categoryId, name },
+            error: 'Category name must be between 3 and 100 characters.'
+        });
+    }
+
+    try {
+        await updateCategory(categoryId, name);
+
+        req.flash('success', 'Category updated successfully.');
+        res.redirect('/categories');
+
+    } catch (error) {
+        console.error("Error updating category:", error);
+        res.status(500).send("Error updating category");
+    }
+};
+export {
+    showCategoryDetailsPage,
+    showCategoriesPage,
+    showAssignCategoriesForm,
+    processAssignCategoriesForm,
+    showNewCategoryForm,
+    processNewCategoryForm,
+    showEditCategoryForm,
+    processEditCategoryForm
+};
