@@ -8,6 +8,16 @@ import {
     updateCategory
 } from '../models/categories.js';
 import { getProjectDetails } from '../models/projects.js';
+import { body, validationResult } from 'express-validator';
+
+const categoryValidation = [
+    body('name')
+        .trim()
+        .notEmpty()
+        .withMessage('Category name is required')
+        .isLength({ min: 3, max: 100 })
+        .withMessage('Category name must be between 3 and 100 characters')
+];
 
 const showCategoriesPage = async (req, res) => {
     try {
@@ -72,14 +82,16 @@ const showNewCategoryForm = (req, res) => {
 };
 
 const processNewCategoryForm = async (req, res) => {
-    const { name } = req.body;
-
-    if (!name || name.length < 3 || name.length > 100) {
-        return res.render('new-category', {
-            title: 'Create New Category',
-            error: 'Category name must be between 3 and 100 characters.'
+    const results = validationResult(req);
+    if (!results.isEmpty()) {
+        results.array().forEach((error) => {
+            req.flash('error', error.msg);
         });
+
+        return res.redirect('/new-category');
     }
+
+    const { name } = req.body;
 
     try {
         await insertCategory(name);
@@ -106,16 +118,18 @@ const showEditCategoryForm = async (req, res) => {
 };
 
 const processEditCategoryForm = async (req, res) => {
-    const { name } = req.body;
     const categoryId = req.params.id;
 
-    if (!name || name.length < 3 || name.length > 100) {
-        return res.render('edit-category', {
-            title: 'Edit Category',
-            category: { category_id: categoryId, name },
-            error: 'Category name must be between 3 and 100 characters.'
+    const results = validationResult(req);
+    if (!results.isEmpty()) {
+        results.array().forEach((error) => {
+            req.flash('error', error.msg);
         });
+
+        return res.redirect('/edit-category/' + categoryId);
     }
+
+    const { name } = req.body;
 
     try {
         await updateCategory(categoryId, name);
@@ -128,6 +142,7 @@ const processEditCategoryForm = async (req, res) => {
         res.status(500).send("Error updating category");
     }
 };
+
 export {
     showCategoryDetailsPage,
     showCategoriesPage,
@@ -136,5 +151,6 @@ export {
     showNewCategoryForm,
     processNewCategoryForm,
     showEditCategoryForm,
-    processEditCategoryForm
+    processEditCategoryForm,
+    categoryValidation
 };
