@@ -267,7 +267,6 @@ footer p {
 
 .users-table {
     width: 100%;
-    max-width: 800px;
     border-collapse: collapse;
     margin: 20px 0;
     background-color: var(--bg-card);
@@ -329,5 +328,24 @@ footer p {
     main {
         margin: 3rem auto;
         padding: 4rem;
+    }
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media screen and (max-width: 600px) {
+    .users-table th,
+    .users-table td {
+        padding: 10px 5px;
+        font-size: 0.9rem;
+    }
+
+    .role-badge {
+        padding: 4px 6px;
+        font-size: 0.75rem;
     }
 }
