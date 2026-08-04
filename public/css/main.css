@@ -331,13 +331,8 @@ footer p {
     }
 }
 
-.table-responsive {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
 @media screen and (max-width: 600px) {
+
     .users-table th,
     .users-table td {
         padding: 10px 5px;
