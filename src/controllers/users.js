@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { createUser, authenticateUser } from '../models/users.js';
+import { createUser, authenticateUser, getAllUsers } from '../models/users.js';
 
 const showUserRegistrationForm = (req, res) => {
     res.render('register', { title: 'Register' });
@@ -9,14 +9,11 @@ const processUserRegistrationForm = async (req, res) => {
     const { name, email, password } = req.body;
 
     try {
-        // Hash the password before storing it
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(password, salt);
 
-        // Create the user in the database
         const userId = await createUser(name, email, passwordHash);
 
-        // Redirect to the home page after successful registration
         req.flash('success', 'Registration successful! Please log in.');
         res.redirect('/');
     } catch (error) {
@@ -38,7 +35,6 @@ const processLogout = async (req, res) => {
     req.flash('success', 'Logout successful!');
     res.redirect('/login');
 };
-
 
 const requireLogin = (req, res, next) => {
     if (!req.session || !req.session.user) {
@@ -92,21 +88,42 @@ const processLoginForm = async (req, res) => {
  */
 const requireRole = (role) => {
     return (req, res, next) => {
-        // Check if user is logged in first
         if (!req.session || !req.session.user) {
             req.flash('error', 'You must be logged in to access this page.');
             return res.redirect('/login');
         }
 
-        // Check if user's role matches the required role
         if (req.session.user.role_name !== role) {
             req.flash('error', 'You do not have permission to access this page.');
             return res.redirect('/');
         }
 
-        // User has required role, continue
         next();
     };
 };
 
-export { showUserRegistrationForm, processUserRegistrationForm, showLoginForm, processLoginForm, processLogout, requireLogin, showDashboard, requireRole };
+const showUsersPage = async (req, res, next) => {
+    try {
+        const usersList = await getAllUsers();
+
+        res.render('users', {
+            title: 'System Users',
+            users: usersList
+        });
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        next(error);
+    }
+};
+
+export {
+    showUserRegistrationForm,
+    processUserRegistrationForm,
+    showLoginForm,
+    processLoginForm,
+    processLogout,
+    requireLogin,
+    showDashboard,
+    requireRole,
+    showUsersPage
+};

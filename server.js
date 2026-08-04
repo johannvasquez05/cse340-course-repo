@@ -48,7 +48,7 @@ app.use((req, res, next) => {
     if (NODE_ENV === 'development') {
         console.log(`${req.method} ${req.url}`);
     }
-    next(); // Pass control to the next middleware or route
+    next();
 });
 
 // Middleware to make variables available to all templates
@@ -58,8 +58,6 @@ app.use((req, res, next) => {
     if (req.session && req.session.user) {
         res.locals.isLoggedIn = true;
     }
-
-    // --- STEP 9 UPDATE: Make the user object (and role) available in all templates ---
     res.locals.user = req.session.user || null;
 
     // Set NODE_ENV

@@ -37,13 +37,14 @@ import {
     processLogout,
     requireLogin,
     showDashboard,
-    requireRole
+    requireRole,
+    showUsersPage
 } from './controllers/users.js';
 import { testErrorPage } from './controllers/errors.js';
 
 const router = express.Router();
 
-// --- Public Routes (Anyone can view these) ---
+// --- Public Routes ---
 router.get('/', showHomePage);
 router.get('/organizations', showOrganizationsPage);
 router.get('/projects', showProjectsPage);
@@ -85,8 +86,10 @@ router.get('/login', showLoginForm);
 router.post('/login', processLoginForm);
 router.get('/logout', processLogout);
 
-// --- Protected User Routes (Any logged-in user) ---
+// --- Protected User Routes ---
 router.get('/dashboard', requireLogin, showDashboard);
+
+router.get('/users', requireRole('admin'), showUsersPage);
 
 // --- Error Testing ---
 router.get('/test-error', testErrorPage);

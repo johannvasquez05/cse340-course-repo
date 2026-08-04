@@ -11,6 +11,11 @@
         <p>Username: <%= email %>
         </p>
 
+        <% if (user && user.role_name==='admin' ) { %>
+            <p>Admin Controls: </p>
+            <a class="btn" href="/users">View All System Users</a>
+            <% } %>
+
     </main>
 
     <%- include('partials/footer') %>
