@@ -28,9 +28,11 @@
                                 <% } else { %>
                                     None
                                     <% } %>
-                                        <p><a class="btn" href="/assign-categories/<%= project.project_id %>">Edit
-                                                Categories</a>
-                                        </p>
+                                        <% if (user && user.role_name==='admin' ) { %>
+                                            <p><a class="btn" href="/assign-categories/<%= project.project_id %>">Edit
+                                                    Categories</a>
+                                            </p>
+                                            <% } %>
             </p>
 
             <h2>About this Project</h2>
@@ -38,8 +40,9 @@
                 <%= project.description %>
             </p>
         </div>
-
-        <p><a class="btn" href="/edit-project/<%= project.project_id %>">Edit Project Details</a></p>
+        <% if (user && user.role_name==='admin' ) { %>
+            <p><a class="btn" href="/edit-project/<%= project.project_id %>">Edit Project Details</a></p>
+            <% } %>
     </main>
 
     <%- include('partials/footer') %>

@@ -14,7 +14,9 @@
                 </li>
                 <% }); %>
         </ul>
-        <a href="/new-category" class="btn">Create New Category</a>
+        <% if (user && user.role_name==='admin' ) { %>
+            <a href="/new-category" class="btn">Create New Category</a>
+            <% } %>
     </main>
 
     <%- include('partials/footer') %>

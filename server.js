@@ -58,7 +58,10 @@ app.use((req, res, next) => {
     if (req.session && req.session.user) {
         res.locals.isLoggedIn = true;
     }
-    
+
+    // --- STEP 9 UPDATE: Make the user object (and role) available in all templates ---
+    res.locals.user = req.session.user || null;
+
     // Set NODE_ENV
     res.locals.NODE_ENV = NODE_ENV;
     next();
