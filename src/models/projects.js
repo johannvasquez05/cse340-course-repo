@@ -118,4 +118,44 @@ const updateProject = async (projectId, projectData) => {
     return result.rows[0];
 };
 
-export { getAllProjects, getProjectsByOrganizationId, getUpcomingProjects, getProjectDetails, createProject, updateProject };
+async function addVolunteer(userId, projectId) {
+    // Replaced MySQL's "INSERT IGNORE" with Postgres's "ON CONFLICT DO NOTHING"
+    // Note: This requires a unique constraint on (user_id, project_id) in your database schema.
+    const sql = `
+        INSERT INTO project_volunteers (user_id, project_id) 
+        VALUES ($1, $2) 
+        ON CONFLICT DO NOTHING
+    `;
+    return db.query(sql, [userId, projectId]);
+}
+
+async function removeVolunteer(userId, projectId) {
+    // Replaced ? with $1 and $2
+    const sql = 'DELETE FROM project_volunteers WHERE user_id = $1 AND project_id = $2';
+    return db.query(sql, [userId, projectId]);
+}
+
+async function getVolunteeredProjects(userId) {
+    // Replaced ? with $1 and adapted the return object for the 'pg' library
+    const sql = `
+        SELECT p.* 
+        FROM project p
+        JOIN project_volunteers pv ON p.project_id = pv.project_id
+        WHERE pv.user_id = $1
+    `;
+    const result = await db.query(sql, [userId]);
+    return result.rows;
+}
+
+async function checkVolunteerStatus(userId, projectId) {
+    // Replaced ? with $1 and $2, and adapted the return object
+    const sql = 'SELECT * FROM project_volunteers WHERE user_id = $1 AND project_id = $2';
+    const result = await db.query(sql, [userId, projectId]);
+    return result.rows.length > 0;
+}
+export {
+    getAllProjects, getProjectsByOrganizationId, getUpcomingProjects, getProjectDetails, createProject, updateProject, addVolunteer,
+    removeVolunteer,
+    getVolunteeredProjects,
+    checkVolunteerStatus
+};

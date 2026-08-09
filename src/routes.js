@@ -16,7 +16,9 @@ import {
     processNewProjectForm,
     projectValidation,
     showEditProjectForm,
-    processEditProjectForm
+    processEditProjectForm,
+    processVolunteer,
+    processUnvolunteer
 } from './controllers/projects.js';
 import {
     showCategoriesPage,
@@ -90,6 +92,10 @@ router.get('/logout', processLogout);
 router.get('/dashboard', requireLogin, showDashboard);
 
 router.get('/users', requireRole('admin'), showUsersPage);
+
+// --- Protected Volunteer Routes ---
+router.post('/project/:id/volunteer', requireLogin, processVolunteer);
+router.post('/project/:id/unvolunteer', requireLogin, processUnvolunteer);
 
 // --- Error Testing ---
 router.get('/test-error', testErrorPage);

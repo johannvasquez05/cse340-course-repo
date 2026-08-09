@@ -211,6 +211,22 @@ form label {
     color: var(--bg-card);
 }
 
+.btn-primary {
+    background-color: #1e8536;
+}
+
+.btn-primary:hover {
+    background-color: #155724;
+}
+
+.btn-warning {
+    background-color: #972631;
+}
+
+.btn-warning:hover {
+    background-color: #721c24;
+}
+
 a {
     color: #162438;
     text-decoration: underline;
