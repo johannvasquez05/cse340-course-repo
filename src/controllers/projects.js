@@ -73,7 +73,6 @@ const processUnvolunteer = async (req, res) => {
         await removeVolunteer(userId, projectId);
 
         req.flash('success', 'You have been removed as a volunteer.');
-        // Redirects back to the page the request came from (Details or Dashboard)
         res.redirect(req.get('Referrer') || `/project/${projectId}`);
     } catch (error) {
         console.error("Error removing volunteer status:", error);
