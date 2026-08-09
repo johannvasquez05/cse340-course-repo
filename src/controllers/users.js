@@ -49,7 +49,6 @@ const showDashboard = async (req, res) => {
     try {
         const user = req.session.user;
         
-        // Fetch the list of projects this user has volunteered for
         const volunteeredProjects = await getVolunteeredProjects(user.user_id);
 
         res.render('dashboard', {

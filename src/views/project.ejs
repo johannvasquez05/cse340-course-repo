@@ -44,7 +44,6 @@
             <div class="volunteer-section">
                 <% if (isVolunteering) { %>
                     <p>You are volunteering for this project.</p>
-                    <!-- Using a form is best practice for state-changing actions in the database -->
                     <form action="/project/<%= project.project_id %>/unvolunteer" method="POST">
                         <button type="submit" class="btn btn-warning">Remove Me as Volunteer</button>
                     </form>

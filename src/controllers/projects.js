@@ -36,7 +36,6 @@ const showProjectDetailsPage = async (req, res) => {
 
         const categories = await getCategoriesByProjectId(projectId);
 
-        // Check if user is logged in, then query volunteer status
         let isVolunteering = false;
         if (req.session.user) {
             isVolunteering = await checkVolunteerStatus(req.session.user.user_id, projectId);
